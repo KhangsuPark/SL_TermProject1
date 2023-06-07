@@ -6,7 +6,8 @@ import requests
 import xml.etree.ElementTree as ET
 import telepot
 import traceback
-
+import pathFInder
+import spam
 
 class MainGUI:
 
@@ -15,6 +16,7 @@ class MainGUI:
         url = 'http://www.cha.go.kr/cha/SearchKindOpenapiList.do'
         param = {'ccbaCtcd' : '11'}
         response = requests.get(url, params=param)
+        print(response.text)
         self.root = ET.fromstring(response.text)
         self.apiKey = 'AIzaSyBB47PEev4ghi50AZ3j3Xf-VcMGxgX67fc'
         params1 = [21,22,23,24,25,26,45,31,32,33,34,35,36,37,38,50,'ZZ']
@@ -91,6 +93,8 @@ class MainGUI:
         TOKEN = '6062580679:AAH9aWOA0h6cEIOIBjP0j7ZAxq5-EUZleRA'
         self.bot = telepot.Bot(TOKEN)
         self.bot.message_loop(self.handle)
+        self.current_lon = 0
+        self.current_lat = 0
 
         #이미지 파일
         self.image_path = 'heritage.png'
@@ -115,28 +119,59 @@ class MainGUI:
         text = msg['text']
         args = text.split(' ')
 
-        if text.startswith('정보') and len(args) > 1:
-            print('try to 정보', args[1])
+        if text.startswith('검색') and len(args) > 1:
+            print('try to 검색', args[1])
             existFlag = False
+            search = ''
+            for i in args:
+                if i != '검색':
+                    search += i + ' '
+            search = search[:-1]
+            print(search)
             for item in self.data:
-                if args[1] in item[0]:
+                if search in item[0]:
                     existFlag = True
-                    msg = '<' + args[1] + '정보>\n'
-                    ccsi = item[2]
-                    ccba = item[3]
-                    admin = item[4]
+                    msg = '<' + search + '에 대한 정보>\n'
                     msg += '문화재 종목 : ' + item[7] + '\n'
                     msg += '시도명 : ' + item[2] + '\n'
                     msg += '시군구명 : ' + item[3] + '\n'
                     msg += '관리자 : ' + item[4] + '\n'
                     break
 
-            if existFlag == True:
+            if existFlag:
                 self.sendMessage(chat_id, msg)
             else:
                 self.sendMessage(chat_id, '정보가 없습니다')
         elif text.startswith('거리') and len(args) > 1:
-            pass
+            print('try to 거리', args[1])
+            existFlag = False
+            search = ''
+            for i in args:
+                if i != '거리':
+                    search += i + ' '
+            search = search[:-1]
+            print(search)
+            for item in self.data:
+                if search in item[0]:
+                    existFlag = True
+                    lon = item[5]
+                    lat = item[6]
+                    break
+            if existFlag == True:
+                msg += spam.len(self.current_lat,self.current_lon,lat,lon)+'km'
+                self.sendMessage(chat_id, msg)
+            else:
+                self.sendMessage(chat_id, '정보가 없습니다')
+        elif text.startswith('현위치') and len(args) > 1:
+            print('try to 현위치 갱신')
+            temp = ''
+            for i in args:
+                if i != '현위치':
+                    temp += i + ' '
+            temp = temp[:-1]
+            self.current_lat,self.current_lon = pathFInder.get_geocode(temp,self.apiKey)
+            print(self.current_lat, self.current_lon)
+
 
         elif text.startswith('분포'):
             print('try to 분포')
@@ -174,7 +209,7 @@ class MainGUI:
         self.info_canvas.itemconfig(self.text_object[3], text='관리자 : ' + admin)
 
         if lon == 0 or lat == 0:
-            print(lon, lat)
+            pass
         else:
             marker_color = 'red'
             url = f"https://maps.googleapis.com/maps/api/staticmap?center={lat},{lon}&zoom=13&size=600x400&key={self.apiKey}"
