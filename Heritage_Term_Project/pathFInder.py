@@ -1,6 +1,6 @@
 import requests
 import sys
-num = 3.153225
+
 
 
 def get_geocode(address, api_key):
