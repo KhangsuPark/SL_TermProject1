@@ -16,7 +16,6 @@ class MainGUI:
         url = 'http://www.cha.go.kr/cha/SearchKindOpenapiList.do'
         param = {'ccbaCtcd' : '11'}
         response = requests.get(url, params=param)
-        print(response.text)
         self.root = ET.fromstring(response.text)
         self.apiKey = 'AIzaSyBB47PEev4ghi50AZ3j3Xf-VcMGxgX67fc'
         params1 = [21,22,23,24,25,26,45,31,32,33,34,35,36,37,38,50,'ZZ']
@@ -127,7 +126,6 @@ class MainGUI:
                 if i != '검색':
                     search += i + ' '
             search = search[:-1]
-            print(search)
             for item in self.data:
                 if search in item[0]:
                     existFlag = True
@@ -143,14 +141,12 @@ class MainGUI:
             else:
                 self.sendMessage(chat_id, '정보가 없습니다')
         elif text.startswith('거리') and len(args) > 1:
-            print('try to 거리', args[1])
             existFlag = False
             search = ''
             for i in args:
                 if i != '거리':
                     search += i + ' '
             search = search[:-1]
-            print(search)
             lat,lon = 0,0
             for item in self.data:
                 if search in item[0]:

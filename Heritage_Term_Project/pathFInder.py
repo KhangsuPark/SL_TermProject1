@@ -2,7 +2,6 @@ import requests
 import sys
 
 
-
 def get_geocode(address, api_key):
     url = f"https://maps.googleapis.com/maps/api/geocode/json?key={api_key}&address={address}"
     response = requests.get(url)
@@ -15,4 +14,3 @@ def get_geocode(address, api_key):
     else:
         return None
 
-print(sys.path)

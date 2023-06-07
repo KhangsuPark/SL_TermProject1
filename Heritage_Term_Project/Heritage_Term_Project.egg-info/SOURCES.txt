@@ -1,7 +1,0 @@
-main.py
-pathFInder.py
-setup.py
-Heritage_Term_Project.egg-info/PKG-INFO
-Heritage_Term_Project.egg-info/SOURCES.txt
-Heritage_Term_Project.egg-info/dependency_links.txt
-Heritage_Term_Project.egg-info/top_level.txt
