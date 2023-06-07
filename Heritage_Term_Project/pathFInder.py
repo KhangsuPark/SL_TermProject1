@@ -1,4 +1,7 @@
 import requests
+import sys
+num = 3.153225
+
 
 def get_geocode(address, api_key):
     url = f"https://maps.googleapis.com/maps/api/geocode/json?key={api_key}&address={address}"
@@ -12,6 +15,4 @@ def get_geocode(address, api_key):
     else:
         return None
 
-api_key = "AIzaSyBB47PEev4ghi50AZ3j3Xf-VcMGxgX67fc"  # 여기에 발급받은 Google Maps Geocoding API 키를 입력하세요.
-address = '경기도 시흥시 산기대학로 237 한국공학대학교'  # 여기에 주소를 입력하세요.
-latitude, longitude = get_geocode(address, api_key)
+print(sys.path)

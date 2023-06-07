@@ -7,7 +7,7 @@ import xml.etree.ElementTree as ET
 import telepot
 import traceback
 import pathFInder
-import spam
+import lengthCalc
 
 class MainGUI:
 
@@ -93,8 +93,8 @@ class MainGUI:
         TOKEN = '6062580679:AAH9aWOA0h6cEIOIBjP0j7ZAxq5-EUZleRA'
         self.bot = telepot.Bot(TOKEN)
         self.bot.message_loop(self.handle)
-        self.current_lon = 0
-        self.current_lat = 0
+        self.current_lon = 127.0182146
+        self.current_lat = 37.589116
 
         #이미지 파일
         self.image_path = 'heritage.png'
@@ -151,14 +151,19 @@ class MainGUI:
                     search += i + ' '
             search = search[:-1]
             print(search)
+            lat,lon = 0,0
             for item in self.data:
                 if search in item[0]:
                     existFlag = True
-                    lon = item[5]
-                    lat = item[6]
+                    lon = getdouble(item[5])
+                    lat = getdouble(item[6])
                     break
             if existFlag == True:
-                msg += spam.len(self.current_lat,self.current_lon,lat,lon)+'km'
+                kilo = lengthCalc.len(self.current_lat,self.current_lon,lat,lon)
+
+                kilo_str = str(int(kilo))
+                msg = '거리는 약'+kilo_str+'km'
+
                 self.sendMessage(chat_id, msg)
             else:
                 self.sendMessage(chat_id, '정보가 없습니다')
